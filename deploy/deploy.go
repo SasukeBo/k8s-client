@@ -65,12 +65,13 @@ func (d *Deployer) getObjects(in []byte) ([]*unstructured.Unstructured, error) {
 	parts := strings.Split(string(in), "---")
 	var outs []*unstructured.Unstructured
 	for _, part := range parts {
-		if len(part) == 0 {
-			continue
-		}
 		deployment := make(map[string]interface{})
 		if err := yaml.Unmarshal([]byte(part), &deployment); err != nil {
 			return nil, err
+		}
+
+		if len(deployment) == 0 {
+			continue
 		}
 		outs = append(outs, &unstructured.Unstructured{Object: deployment})
 	}
