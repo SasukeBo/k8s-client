@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	_ "k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"os"
+	"strings"
 )
 
 var (
@@ -30,10 +31,11 @@ Example: deploy -c ./kubeconfig.config ./example.yaml
 Options:
 	-c,  --config    <kubeconfig file path> Kubernetes client config
 	-n,  --namespace <k8s namespace>
+	-m,  --merge-env <env file path>        The environment config file path to merge
 `, version)
 
 func usage() {
-	fmt.Printf("%s\n", usageStr)
+	fmt.Printf("%s\n", strings.TrimSpace(usageStr))
 	os.Exit(0)
 }
 
@@ -46,12 +48,15 @@ func main() {
 	var (
 		kubeconfig string
 		namespace  string
+		mergeEnv   string
 	)
 
 	flag.StringVar(&kubeconfig, "c", "", "The Kubernetes client config file path")
 	flag.StringVar(&kubeconfig, "config", "", "The Kubernetes client config file path")
 	flag.StringVar(&namespace, "n", "default", "")
 	flag.StringVar(&namespace, "namespace", "default", "")
+	flag.StringVar(&mergeEnv, "m", "", "")
+	flag.StringVar(&mergeEnv, "merge-env", "", "")
 
 	flag.Usage = usage
 	flag.Parse()
@@ -71,7 +76,7 @@ func main() {
 		fatal(err)
 	}
 
-	out, err := environment.HandleEnv(content)
+	out, err := environment.HandleEnv(content, mergeEnv)
 	if err != nil {
 		fatal(err)
 	}

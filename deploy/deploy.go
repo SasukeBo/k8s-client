@@ -107,7 +107,9 @@ func (d *Deployer) apply(obj *unstructured.Unstructured) error {
 	}
 
 	if exist {
-		err = d.update(obj, deploymentRes)
+		if obj.GetKind() != K8S_SERVICES { // 如果资源不是 Service，则更新
+			err = d.update(obj, deploymentRes)
+		}
 	} else {
 		err = d.create(obj, deploymentRes)
 	}
