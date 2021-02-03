@@ -1,4 +1,4 @@
-module github.com/SasukeBo/k8s-client
+module git.uinnova.com/thingyouwe-dockerfile/ci-deployer
 
 go 1.15
 

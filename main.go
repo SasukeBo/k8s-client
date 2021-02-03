@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/SasukeBo/k8s-client/deploy"
-	"github.com/SasukeBo/k8s-client/environment"
+	"git.uinnova.com/thingyouwe-dockerfile/ci-deployer/deploy"
+	"git.uinnova.com/thingyouwe-dockerfile/ci-deployer/environment"
 	"gopkg.in/gookit/color.v1"
 	"io/ioutil"
 	_ "k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
