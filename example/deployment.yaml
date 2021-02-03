@@ -1,0 +1,51 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: works-srv-1
+  namespace: thingyouwe-staging
+spec:
+  selector:
+    app: works-srv-1
+  ports:
+    - port: 8001
+      name: rpc
+      targetPort: 8001
+      protocol: TCP
+    - port: 80
+      name: http
+      targetPort: 80
+      protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: works-srv-1
+  namespace: thingyouwe-staging
+  labels:
+    app: works-srv-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: works-srv-1
+  template:
+    metadata:
+      labels:
+        app: works-srv-1
+    spec:
+      serviceAccountName: micro-services
+      imagePullSecrets:
+        - name: pipeline-bj-registry
+      containers:
+        - name: works-srv-1
+          image: ${CICD_IMAGE}:${CICD_EXECUTION_SEQUENCE}
+          ports:
+            - containerPort: 80
+            - containerPort: 8001
+          env:
+            - name: APOLLO_IP
+              value: apollo.api.test.thingyouwe.com
+            - name: APOLLO_ENV
+              value: staging
+            - name: APOLLO_APPID
+              value: works-srv
